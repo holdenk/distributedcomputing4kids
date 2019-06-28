@@ -15,24 +15,33 @@
 # limitations under the License.
 #
 
+import sys
+
 def find_tags(username):
     """Find the tags for a specific username. Re-uses scraper if present"""
-    scraper_singleton = ScraperSingleton()
-    scraper = scraper_singleton.get_scraper()
-    scraper.quit = False
-    user_data = scraper.get_shared_data(username)
+    # Save and restore stderr/stdout
+    oldstderr = sys.stderr
+    oldstdout = sys.stdout
     tags = []
+    try:
+        scraper_singleton = ScraperSingleton()
+        scraper = scraper_singleton.get_scraper()
+        scraper.quit = False
+        user_data = scraper.get_shared_data(username)
 
-    if user_data is None:
-        raise Exception("Nothing for user %s" % username)
+        if user_data is None:
+            raise Exception("Nothing for user %s" % username)
 
-    media = scraper.deep_get(user_data, 'entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges')
-    for entry in media:
-        edges = entry['node']['edge_media_to_caption']['edges'] or []
-    for node in edges:
-        caption = node['node']['text'] or None
-        if caption is not None:
-            tags += caption.split(' ')
+        media = scraper.deep_get(user_data, 'entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges')
+        for entry in media:
+            edges = entry['node']['edge_media_to_caption']['edges'] or []
+        for node in edges:
+            caption = node['node']['text'] or None
+            if caption is not None:
+                tags += caption.split(' ')
+    finally:
+        sys.stderr = oldstderr
+        sys.stdout = oldstdout
     return tags
 
 # We use a singleton here for performance reasons with map so we
