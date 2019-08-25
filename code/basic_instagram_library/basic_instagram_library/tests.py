@@ -16,7 +16,7 @@
 #
 import unittest
 
-from . import find_tags
+from . import find_words
 
 
 class FindTags(unittest.TestCase):
@@ -26,9 +26,10 @@ class FindTags(unittest.TestCase):
     def assertNotEmpty(self, obj):
         self.assertTrue(obj)
 
-    def test_find_some_tags(self):
-        tags = find_tags("hkarau")
-        self.assertNotEmpty(tags)
+    def test_find_some_words(self):
+        words = find_words("hkarau")
+        self.assertNotEmpty(words)
+        self.assertTrue(len(words) > 4)
 
     def test_find_no_tags(self):
-        self.assertRaises(Exception, find_tags, "hkarau_dne_22")
+        self.assertRaises(Exception, find_words, "hkarau_dne_22")

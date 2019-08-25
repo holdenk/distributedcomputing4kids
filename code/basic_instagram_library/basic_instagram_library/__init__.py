@@ -15,6 +15,6 @@
 # limitations under the License.
 #
 
-from .find_tags import find_tags
+from .find_tags import find_words
 
-__all__ = ["find_tags"]
+__all__ = ["find_words"]
