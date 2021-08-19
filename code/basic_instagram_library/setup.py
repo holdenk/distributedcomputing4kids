@@ -10,10 +10,11 @@ setup(
     packages=find_packages(),
     url='https://github.com/holdenk/distributedcomputing4kids/code/basic_instagram_library',
     license='LICENSE',
-    description='A library to read an instagram users tags',
+    description='A library to read an instagram users tags, a thin wrapper around instagram-scraper',
     long_description=open('README.md').read(),
     install_requires=[
-        'instagram-scraper==1.6.1'
+        'instagram-scraper==1.10.2',
+        'retry'
     ],
     test_requires=[
         'nose==1.3.7',

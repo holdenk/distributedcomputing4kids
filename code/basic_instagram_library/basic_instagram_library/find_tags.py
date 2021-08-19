@@ -15,8 +15,10 @@
 # limitations under the License.
 #
 
+from retry import retry
 import sys
 
+@retry(TypeError, tries=10, delay=10, backoff=2, max_delay=600)
 def find_words(username):
     """Find the words for a specific username. Re-uses scraper if present"""
     # Save and restore stderr/stdout
@@ -27,7 +29,7 @@ def find_words(username):
         scraper_singleton = ScraperSingleton()
         scraper = scraper_singleton.get_scraper()
         scraper.quit = False
-        user_data = scraper.get_shared_data(username)
+        user_data = scraper.get_shared_data_userinfo(username)
 
         if user_data is None:
             raise Exception("Nothing for user %s" % username)
@@ -67,7 +69,6 @@ class ScraperBaseClass(object):
             self._scraper = scraper
         return self._scraper
 
-    
+
 class ScraperSingleton(ScraperBaseClass, metaclass=Singleton):
     pass
-
